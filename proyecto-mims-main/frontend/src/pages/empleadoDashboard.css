@@ -1,0 +1,11 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.contenido-principal {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
