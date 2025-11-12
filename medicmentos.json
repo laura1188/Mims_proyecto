@@ -1,0 +1,42 @@
+[
+    {
+      "nombre": "Ibuprofeno",
+      "descripcion": "Analgésico y antiinflamatorio no esteroideo (AINE).",
+      "categoria": "Analgésico",
+      "precio_venta": 3500,
+      "stock_actual": 20,
+      "stock_minimo": 10,
+      "fecha_vencimiento": "2026-05-10",
+      "estado": "Activo",
+      "imagen_url": "/imagenes/medicamentos/ibuprofeno.png",
+      "verificar_stock": "Stock suficiente",
+      "esta_vencido": false
+    },
+    {
+      "nombre": "Paracetamol",
+      "descripcion": "Reduce el dolor y la fiebre.",
+      "categoria": "Analgésico",
+      "precio_venta": 2500,
+      "stock_actual": 8,
+      "stock_minimo": 10,
+      "fecha_vencimiento": "2025-12-01",
+      "estado": "Activo",
+      "imagen_url": "/imagenes/medicamentos/paracetamol.jpg",
+      "verificar_stock": "Bajo stock ⚠️",
+      "esta_vencido": false
+    },
+    {
+      "nombre": "celecoxib",
+      "descripcion": "Analgésico y antiinflamatorio no esteroideo (AINE).",
+      "categoria": "Analgésico",
+      "precio_venta": 3500,
+      "stock_actual": 20,
+      "stock_minimo": 10,
+      "fecha_vencimiento": "2026-05-10",
+      "estado": "Activo",
+      "imagen_url": "/imagenes/medicamentos/ibuprofeno.png",
+      "verificar_stock": "Stock suficiente",
+      "esta_vencido": false
+    }
+  ]
+  

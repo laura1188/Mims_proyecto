@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'inventario',
     'facturacion',
     'pedidos',
+    'mensajes',
 ]
 
 # Modelo de usuario personalizado

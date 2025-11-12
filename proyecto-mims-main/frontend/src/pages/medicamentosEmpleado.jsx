@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { getMedicamentos, crearMedicamento, actualizarMedicamento, eliminarMedicamento } from "./inventarioServices";
+import { getMedicamentos, crearMedicamento, actualizarMedicamento, eliminarMedicamento } from "../services/inventarioServices";
 import "../styles/medicamentos.css";
 
 const MedicamentosEmpleado = () => {

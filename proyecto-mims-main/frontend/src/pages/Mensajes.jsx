@@ -1,55 +1,149 @@
-// src/pages/Mensajes.jsx
-import React, { useEffect, useState } from "react";
-import api from "../services/api";
-import Modal from "../components/Modal";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Mensajes() {
-  const [msgs, setMsgs] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [mensajes, setMensajes] = useState([]);
+  const [formData, setFormData] = useState({
+    id: null,
+    nombre: "",
+    correo: "",
+    asunto: "",
+    mensaje: "",
+  });
 
-  useEffect(() => { fetchMsgs(); }, []);
+  const apiUrl = "http://127.0.0.1:8000/api/mensajes/";
 
-  const fetchMsgs = async () => {
-    try {
-      const res = await api.get("/mensajes/"); // ajusta si tu endpoint es otro
-      setMsgs(res.data);
-    } catch (err) {
-      console.error(err);
+  // 🔹 Obtener todos los mensajes
+  const cargarMensajes = async () => {
+    const res = await axios.get(apiUrl);
+    setMensajes(res.data);
+  };
+
+  useEffect(() => {
+    cargarMensajes();
+  }, []);
+
+  // 🔹 Manejar los cambios del formulario
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // 🔹 Crear o actualizar un mensaje
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.id) {
+      await axios.put(`${apiUrl}${formData.id}/`, formData);
+    } else {
+      await axios.post(apiUrl, formData);
+    }
+    setFormData({ id: null, nombre: "", correo: "", asunto: "", mensaje: "" });
+    cargarMensajes();
+  };
+
+  // 🔹 Editar un mensaje existente
+  const handleEdit = (mensaje) => {
+    setFormData(mensaje);
+  };
+
+  // 🔹 Eliminar un mensaje
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Seguro que deseas eliminar este mensaje?")) {
+      await axios.delete(`${apiUrl}${id}/`);
+      cargarMensajes();
     }
   };
 
-  const view = (m) => { setSelected(m); setOpen(true); };
-
   return (
-    <div>
-      <header className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Mensajes</h2>
-        <button onClick={fetchMsgs} className="px-4 py-2 bg-slate-100 rounded">Refrescar</button>
-      </header>
+    <div className="p-6 max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4 text-center">Gestión de Mensajes</h2>
 
-      <div className="bg-white rounded-lg p-4 shadow">
-        {msgs.length === 0 ? <p>No hay mensajes</p> :
-          msgs.map(m => (
-            <div key={m.id} className="border-b py-3 flex justify-between items-center">
-              <div>
-                <p className="font-semibold">{m.asunto}</p>
-                <p className="text-sm text-slate-500">{m.email}</p>
-              </div>
-              <div>
-                <button onClick={() => view(m)} className="px-3 py-1 bg-blue-600 text-white rounded">Ver</button>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-
-      <Modal open={open} title={selected?.asunto || "Mensaje"} onClose={() => setOpen(false)}>
-        <div>
-          <p><strong>De:</strong> {selected?.email}</p>
-          <p className="mt-2">{selected?.mensaje}</p>
+      {/* FORMULARIO */}
+      <form onSubmit={handleSubmit} className="mb-6 p-4 border rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-3">
+          {formData.id ? "Editar Mensaje" : "Nuevo Mensaje"}
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            placeholder="Nombre"
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+            placeholder="Correo"
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="asunto"
+            value={formData.asunto}
+            onChange={handleChange}
+            placeholder="Asunto"
+            className="border p-2 rounded col-span-2"
+            required
+          />
+          <textarea
+            name="mensaje"
+            value={formData.mensaje}
+            onChange={handleChange}
+            placeholder="Mensaje"
+            className="border p-2 rounded col-span-2"
+            required
+          ></textarea>
         </div>
-      </Modal>
+
+        <button
+          type="submit"
+          className="mt-4 bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800"
+        >
+          {formData.id ? "Actualizar" : "Enviar"}
+        </button>
+      </form>
+
+      {/* TABLA DE MENSAJES */}
+      <table className="w-full border-collapse border text-sm">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border p-2">Nombre</th>
+            <th className="border p-2">Correo</th>
+            <th className="border p-2">Asunto</th>
+            <th className="border p-2">Mensaje</th>
+            <th className="border p-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mensajes.map((m) => (
+            <tr key={m.id} className="hover:bg-gray-50">
+              <td className="border p-2">{m.nombre}</td>
+              <td className="border p-2">{m.correo}</td>
+              <td className="border p-2">{m.asunto}</td>
+              <td className="border p-2">{m.mensaje}</td>
+              <td className="border p-2 space-x-2">
+                <button
+                  onClick={() => handleEdit(m)}
+                  className="bg-yellow-500 text-white px-2 py-1 rounded"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(m.id)}
+                  className="bg-red-600 text-white px-2 py-1 rounded"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
